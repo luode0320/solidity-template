@@ -56,6 +56,8 @@ yarn hardhat test test/test.ts
 
 安装完成之后会在右下角有一个 `Go Live` 按钮, 点击之后会生成一个 `http://localhost:5500` 的服务.
 
+Live Server 启动一次可以多次使用, 只要是同一个路径的  `index.html` , 修改后会热部署 html, 不用重复启动。
+
 
 
 ## 启动一个网络节点
