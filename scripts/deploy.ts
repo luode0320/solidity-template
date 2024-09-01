@@ -279,9 +279,8 @@ main()
                     .container {
                         display: flex;
                         flex-direction: row;
-                        max-width: 90%;
-                        width: 100%;
-                        padding: 1% 5%;
+                        width: 95%;
+                        padding: 2%;
                     }
 
                     #methods,
@@ -293,7 +292,6 @@ main()
                     }
 
                     #methods {
-                        border-right: 5px solid #ddd;
                         /* 添加右侧边框 */
                     }
 
