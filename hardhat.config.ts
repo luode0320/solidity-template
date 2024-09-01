@@ -26,7 +26,7 @@ const config: HardhatUserConfig = {
   networks: {
     hardhat: {},
     localhost: {
-      url: "http://localhost:8545",
+      url: "http://127.0.0.1:8545",
       chainId: 31337,
     },
     sepolia: {
