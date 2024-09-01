@@ -48,7 +48,7 @@ yarn hardhat test test/test.ts
 
 如果你不愿意一直写脚本测试, 我们提供了一个 自动化 html 页面模拟 `remix` 的调试流程.可以利用这个自动生成的 html 进行可视化调试.
 
-
+<img src="https://github.com/luode0320/blog/blob/main/data/picture/image-20240902032805880.png?raw=true" alt="image-20240902032805880"/>
 
 ## 调试准备阶段:
 
