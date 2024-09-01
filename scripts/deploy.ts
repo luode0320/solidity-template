@@ -180,34 +180,46 @@ main()
                                             p.className = 'result-success';
                                             p.innerHTML = "调用成功: " + item.name + "(): <br>" + result;
                                             results.appendChild(p);
+
+                                            results.scrollTop = results.scrollHeight;
                                         } catch (error) {
                                             // 在结果区域显示错误信息
                                             const p = document.createElement('p');
                                             p.className = 'result-error';
                                             p.innerHTML = "调用失败: " + item.name + "(): <br>" + error.message;
                                             results.appendChild(p);
+
+                                            results.scrollTop = results.scrollHeight;
                                         }
                                     };
 
                                     // 遍历方法的所有输入参数
-                                    item.inputs.forEach(input => {
-                                        // 为每个输入参数创建一个标签
-                                        const label = document.createElement('label');
-                                        // 设置标签文本为参数名称
-                                        label.innerText = input.name + ': ';
-                                        // 将标签添加到参数输入区域
-                                        div.appendChild(label);
+                                    if (item.inputs.length > 0) {
+                                        item.inputs.forEach(input => {
+                                            const innerContainer = document.createElement('div');
+                                            innerContainer.className = 'inner-container'; // 添加一个类名
 
-                                        // 为每个输入参数创建一个文本输入框
-                                        const inputEl = document.createElement('input');
-                                        // 设置输入框类型为文本
-                                        inputEl.type = 'text';
-                                        // 将输入框添加到参数输入区域
-                                        div.appendChild(inputEl);
+                                            // 为每个输入参数创建一个标签
+                                            const label = document.createElement('label');
+                                            // 设置标签文本为参数名称
+                                            label.innerText = input.name + ': ';
+                                            // 将标签添加到参数输入区域
+                                            div.appendChild(label);
+                                            innerContainer.appendChild(label);
 
-                                        // 添加一个换行的元素，使得每个参数组独立显示
-                                        div.appendChild(document.createElement('br'));
-                                    });
+                                            // 为每个输入参数创建一个文本输入框
+                                            const inputEl = document.createElement('input');
+                                            // 设置输入框类型为文本
+                                            inputEl.type = 'text';
+                                            // 将输入框添加到参数输入区域
+                                            innerContainer.appendChild(inputEl);
+
+                                            div.appendChild(innerContainer);
+                                        });
+                                    } else {
+                                        // 如果没有输入参数，则添加一个特定的类
+                                        button.classList.add('no-inputs');
+                                    }
                                 }
                             });
                         }
@@ -232,6 +244,7 @@ main()
                         /* 垂直居中对齐 */
                         gap: 10px;
                         /* 子元素之间的间隔 */
+                        justify-content: center;
                     }
 
                     #contractAddressInput label {
@@ -267,13 +280,15 @@ main()
                         flex-direction: row;
                         max-width: 90%;
                         width: 100%;
-                        padding: 20px;
+                        padding: 1% 5%;
                     }
 
                     #methods,
                     #results {
                         flex: 1;
                         padding: 20px;
+                        max-height: 700px;
+                        overflow-y: auto;
                     }
 
                     #methods {
@@ -316,7 +331,6 @@ main()
                     /* 参数输入区域样式 */
                     #methods {
                         max-width: 600px;
-                        margin: auto;
                         padding: 20px;
                     }
 
@@ -357,7 +371,8 @@ main()
                         align-items: center;
                         /* 垂直居中对齐 */
                         margin-bottom: 10px;
-                        /* 间隔 */
+                        /* 让子元素分别靠左和靠右对齐 */
+                        justify-content: space-between; 
                     }
 
                     /* CSS样式 */
@@ -379,6 +394,18 @@ main()
                     .param-group input[type="text"] {
                         width: auto;
                         display: inline-block;
+                    }
+
+                    .inner-container {
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: flex-end;
+                        align-items: center;
+                    }
+
+                    /* 新增的样式 */
+                    .no-inputs {
+                        background-color: #6b976d;
                     }
                 </style>
 
