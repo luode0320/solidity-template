@@ -211,6 +211,7 @@ main()
                                             const inputEl = document.createElement('input');
                                             // 设置输入框类型为文本
                                             inputEl.type = 'text';
+                                            inputEl.placeholder = input.type;
                                             // 将输入框添加到参数输入区域
                                             innerContainer.appendChild(inputEl);
 
