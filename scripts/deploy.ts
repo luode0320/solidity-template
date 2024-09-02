@@ -176,8 +176,16 @@ main()
                                         });
 
                                         try {
+                                            var func = item.name + "(";
+                                            // 检查是否有输入参数
+                                            if (item.inputs && item.inputs.length > 0) {
+                                                func += item.inputs.map(input => {
+                                                    return input.type;
+                                                }).join(",");
+                                            }
+                                            func = func + ")";
                                             // 使用收集到的参数调用合约方法
-                                            const result = await contract[item.name](...args);
+                                            const result = await contract[func](...args);
                                             // 在结果区域显示成功信息及结果
                                             const p = document.createElement('p');
                                             p.className = 'result-success';
