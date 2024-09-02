@@ -95,10 +95,22 @@ main()
                         <div id="results" style="display:none;"></div>
                     </div>
 
+                    <div class="solidity">
+                        <pre id="solidityCode"><code></code></pre>
+                    </div>
+
                     <script>
                         const ARTIFACTS_PATH = '${dir}/artifacts/contracts/${contractName}.sol/${contractName}.json';
+                        const CODE_PATH = '${dir}/contracts/${contractName}.sol';
                         const NETWORK = 'http://127.0.0.1:8545';
 
+                        // 读取合约的 code
+                        async function loadCode() {
+                            const response = await fetch(CODE_PATH);
+                            const data = await response.text();
+                            return data;
+                        }
+                
                         // 读取合约的 ABI
                         async function loadArtifact() {
                             const response = await fetch(ARTIFACTS_PATH);
@@ -114,6 +126,11 @@ main()
                                 alert("请输入合约地址.");
                                 return;
                             }
+
+                            // 获取结果展示区域
+                            const solidityCode = document.getElementById('solidityCode');
+                            solidityCode.firstElementChild.innerText = await loadCode();
+                            solidityCode.style.display = 'block';
 
                             // 读取合约的 ABI(应用程序二进制接口)
                             const abi = await loadArtifact();
@@ -315,6 +332,32 @@ main()
                         /* 添加左侧边框，如果需要的话 */
                     }
 
+                    .solidity {
+                        display: flex;
+                        justify-content: center;
+                    }
+
+                    pre {
+                        /* 背景颜色 */
+                        background-color: #e7d3c144;
+                        border: 1px solid #e7d3c144;
+                        color: black;
+                        white-space: pre-wrap;
+                        /* 保留换行和缩进 */
+                        word-wrap: break-word;
+                        /* 长单词自动换行 */
+                        font-family: monospace;
+                        /* 等宽字体 */
+                        padding: 10px;
+                        /* 内边距 */
+                        border: 1px solid #040404;
+                        /* 边框 */
+                        border-radius: 10px;
+                        /* 圆角 */
+                        overflow-x: auto;
+                        width: 50%;
+                    }
+                
                     /* 按钮样式 */
                     button {
                         background-color: #007BFF;
