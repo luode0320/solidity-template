@@ -204,6 +204,9 @@ main()
                                         try {
                                             // 使用收集到的参数调用合约方法
                                             const result = await contract[func](...args);
+                                            if (typeof result === 'object' && result !== null && !Array.isArray(result)) {
+                                                console.log(result);
+                                            }
                                             // 在结果区域显示成功信息及结果
                                             const p = document.createElement('p');
                                             p.className = 'result-success';
@@ -250,6 +253,31 @@ main()
                                         // 如果没有输入参数，则添加一个特定的类
                                         button.classList.add('no-inputs');
                                     }
+                                }else if (item.type === 'event') {
+                                    // 动态创建事件监听器
+                                    const filter = contract.filters[item.name] ? contract.filters[item.name]() : contract.filters[item.name](...item.anonymous ? [] : item.inputs.map(input => input.indexed));
+
+                                    // 添加事件监听器，当事件发生时，执行回调函数。
+                                    contract.on(filter, (...args) => {
+                                        const p = document.createElement('p');
+                                        p.className = 'result-success';
+
+                                        // 如果事件有参数，则格式化每个参数的信息。
+                                        let eventStr = "事件触发: " + item.name + "(";
+                                        if (item.inputs && item.inputs.length > 0) {
+                                            eventStr += item.inputs.map((input, index) => {
+                                              return input.name + ":" + args[index]
+                                            }).join(",");
+                                        }
+                                        eventStr += ")";
+
+                                        // 将构建好的事件字符串设置为段落元素的内容。
+                                        p.innerHTML = eventStr;
+                                        // 将段落元素添加到结果显示区域。
+                                        results.appendChild(p);
+
+                                        results.scrollTop = results.scrollHeight;
+                                    });
                                 }
                             });
                         }
