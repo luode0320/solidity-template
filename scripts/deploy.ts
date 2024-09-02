@@ -154,116 +154,6 @@ main()
                             methods.innerHTML = '';
                             // 显示方法列表
                             methods.style.display = 'block';
-
-                            // 创建一个发送eth按钮
-
-                            // 创建一个 div 元素用于显示函数参数
-                            const div = document.createElement('div');
-                            // 为 div 设置 ID
-                            div.id = "params-send";
-                            div.className = 'param-group'; // 添加一个类名
-                            // 初始时显示参数输入框
-                            div.style.display = 'block';
-
-                            // 创建一个按钮，用于调用合约中的函数
-                            const button = document.createElement('button');
-                            // 设置按钮文本为函数名称
-                            button.innerText = "发送 ETH";
-
-                            // 包装按钮和参数输入框
-                            const wrapper = document.createElement('div');
-                            wrapper.className = 'button-param-wrapper';
-                            wrapper.appendChild(button);
-                            wrapper.appendChild(div);
-
-                            // 将包装后的元素添加到页面上
-                            methods.appendChild(wrapper);
-
-                            // 为按钮绑定点击事件处理器，当点击时调用
-                            button.onclick = async () => {
-                                // 每次调用合约方法前清空results的内容
-                                // results.innerHTML = '';
-                                // 收集所有输入框中的值作为方法参数
-                                var args = [];
-                                // 将输入框中的值添加到参数数组中
-                                div.querySelectorAll('input').forEach(inputEl => {
-                                    args.push(inputEl.value);
-                                });
-
-                                try {
-                                    var wei = args[0] * Math.pow(10, 18) + ""
-                                    const limit = args[1]
-                                    // 获取签名者对象
-                                    const signer = provider.getSigner(1);
-                                    // 构建交易数据
-                                    const tx = await signer.sendTransaction({
-                                        to: address,
-                                        value: ethers.BigNumber.from(wei),// 发送的 ETH 金额
-                                        gasLimit: ethers.BigNumber.from(limit) // 设置 gas 限制
-                                    });
-
-                                    // 等待交易确认
-                                    await tx.wait();
-
-                                    // 显示成功信息
-                                    const p = document.createElement('p');
-                                    p.className = 'result-success';
-                                    p.innerHTML = "ETH 发送成功: <br>金额: " + ethers.utils.formatEther(ethers.BigNumber.from(wei)) + " ETH, Gas Limit: " + limit;
-                                    document.getElementById('results').appendChild(p);
-                                    document.getElementById('results').scrollTop = document.getElementById('results').scrollHeight;
-                                } catch (error) {
-                                    // 显示错误信息
-                                    const p = document.createElement('p');
-                                    p.className = 'result-error';
-                                    p.innerHTML = "发送 ETH 失败: <br>" + error.message;
-                                    document.getElementById('results').appendChild(p);
-                                    document.getElementById('results').scrollTop = document.getElementById('results').scrollHeight;
-                                }
-                            };
-
-                            // wei amount输入参数
-                            const innerContainer = document.createElement('div');
-                            innerContainer.className = 'inner-container'; // 添加一个类名
-
-                            // 为每个输入参数创建一个标签
-                            const label = document.createElement('label');
-                            // 设置标签文本为参数名称
-                            label.innerText = 'eth amount: ';
-                            // 将标签添加到参数输入区域
-                            div.appendChild(label);
-                            innerContainer.appendChild(label);
-
-                            // 为每个输入参数创建一个文本输入框
-                            const inputEl = document.createElement('input');
-                            // 设置输入框类型为文本
-                            inputEl.type = 'text';
-                            inputEl.value = "1";
-                            // 将输入框添加到参数输入区域
-                            innerContainer.appendChild(inputEl);
-
-                            div.appendChild(innerContainer);
-
-                            // gas limit输入参数
-                            const innerContainer2 = document.createElement('div');
-                            innerContainer2.className = 'inner-container'; // 添加一个类名
-
-                            // 为每个输入参数创建一个标签
-                            const label2 = document.createElement('label');
-                            // 设置标签文本为参数名称
-                            label2.innerText = 'gas limit: ';
-                            // 将标签添加到参数输入区域
-                            div.appendChild(label2);
-                            innerContainer2.appendChild(label2);
-
-                            // 为每个输入参数创建一个文本输入框
-                            const inputE2 = document.createElement('input');
-                            // 设置输入框类型为文本
-                            inputE2.type = 'text';
-                            inputE2.value = "30000";
-                            // 将输入框添加到参数输入区域
-                            innerContainer2.appendChild(inputE2);
-
-                            div.appendChild(innerContainer2);
                 
                             // 遍历 ABI 中定义的所有函数
                             abi.forEach(item => {
@@ -390,6 +280,118 @@ main()
                                     });
                                 }
                             });
+
+
+                            
+                            // 创建一个发送eth按钮
+
+                            // 创建一个 div 元素用于显示函数参数
+                            const div = document.createElement('div');
+                            // 为 div 设置 ID
+                            div.id = "params-send";
+                            div.className = 'param-group'; // 添加一个类名
+                            // 初始时显示参数输入框
+                            div.style.display = 'block';
+
+                            // 创建一个按钮，用于调用合约中的函数
+                            const button = document.createElement('button');
+                            // 设置按钮文本为函数名称
+                            button.innerText = "发送 ETH";
+
+                            // 包装按钮和参数输入框
+                            const wrapper = document.createElement('div');
+                            wrapper.className = 'button-param-wrapper';
+                            wrapper.appendChild(button);
+                            wrapper.appendChild(div);
+
+                            // 将包装后的元素添加到页面上
+                            methods.appendChild(wrapper);
+
+                            // 为按钮绑定点击事件处理器，当点击时调用
+                            button.onclick = async () => {
+                                // 每次调用合约方法前清空results的内容
+                                // results.innerHTML = '';
+                                // 收集所有输入框中的值作为方法参数
+                                var args = [];
+                                // 将输入框中的值添加到参数数组中
+                                div.querySelectorAll('input').forEach(inputEl => {
+                                    args.push(inputEl.value);
+                                });
+
+                                try {
+                                    var wei = args[0] * Math.pow(10, 18) + ""
+                                    const limit = args[1]
+                                    // 获取签名者对象
+                                    const signer = provider.getSigner(1);
+                                    // 构建交易数据
+                                    const tx = await signer.sendTransaction({
+                                        to: address,
+                                        value: ethers.BigNumber.from(wei),// 发送的 ETH 金额
+                                        gasLimit: ethers.BigNumber.from(limit) // 设置 gas 限制
+                                    });
+
+                                    // 等待交易确认
+                                    await tx.wait();
+
+                                    // 显示成功信息
+                                    const p = document.createElement('p');
+                                    p.className = 'result-success';
+                                    p.innerHTML = "ETH 发送成功: <br>金额: " + ethers.utils.formatEther(ethers.BigNumber.from(wei)) + " ETH, Gas Limit: " + limit;
+                                    document.getElementById('results').appendChild(p);
+                                    document.getElementById('results').scrollTop = document.getElementById('results').scrollHeight;
+                                } catch (error) {
+                                    // 显示错误信息
+                                    const p = document.createElement('p');
+                                    p.className = 'result-error';
+                                    p.innerHTML = "发送 ETH 失败: <br>" + error.message;
+                                    document.getElementById('results').appendChild(p);
+                                    document.getElementById('results').scrollTop = document.getElementById('results').scrollHeight;
+                                }
+                            };
+
+                            // wei amount输入参数
+                            const innerContainer = document.createElement('div');
+                            innerContainer.className = 'inner-container'; // 添加一个类名
+
+                            // 为每个输入参数创建一个标签
+                            const label = document.createElement('label');
+                            // 设置标签文本为参数名称
+                            label.innerText = 'eth amount: ';
+                            // 将标签添加到参数输入区域
+                            div.appendChild(label);
+                            innerContainer.appendChild(label);
+
+                            // 为每个输入参数创建一个文本输入框
+                            const inputEl = document.createElement('input');
+                            // 设置输入框类型为文本
+                            inputEl.type = 'text';
+                            inputEl.value = "1";
+                            // 将输入框添加到参数输入区域
+                            innerContainer.appendChild(inputEl);
+
+                            div.appendChild(innerContainer);
+
+                            // gas limit输入参数
+                            const innerContainer2 = document.createElement('div');
+                            innerContainer2.className = 'inner-container'; // 添加一个类名
+
+                            // 为每个输入参数创建一个标签
+                            const label2 = document.createElement('label');
+                            // 设置标签文本为参数名称
+                            label2.innerText = 'gas limit: ';
+                            // 将标签添加到参数输入区域
+                            div.appendChild(label2);
+                            innerContainer2.appendChild(label2);
+
+                            // 为每个输入参数创建一个文本输入框
+                            const inputE2 = document.createElement('input');
+                            // 设置输入框类型为文本
+                            inputE2.type = 'text';
+                            inputE2.value = "30000";
+                            // 将输入框添加到参数输入区域
+                            innerContainer2.appendChild(inputE2);
+
+                            div.appendChild(innerContainer2);
                         }
                             
                         // 页面加载完成后立即调用 loadContract 函数
