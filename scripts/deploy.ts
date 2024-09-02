@@ -324,14 +324,27 @@ main()
                                     // 获取签名者对象
                                     const signer = provider.getSigner(1);
                                     // 构建交易数据
-                                    const tx = await signer.sendTransaction({
-                                        to: address,
-                                        value: ethers.BigNumber.from(wei),// 发送的 ETH 金额
-                                        gasLimit: ethers.BigNumber.from(limit) // 设置 gas 限制
-                                    });
+                                    if (args[2]){
+                                        const tx = await signer.sendTransaction({
+                                            to: address,
+                                            value: ethers.BigNumber.from(wei), // 发送的 ETH 金额
+                                            gasLimit: ethers.BigNumber.from(limit), // 设置 gas 限制
+                                            data: args[2],
+                                        }); 
+                                    
+                                        // 等待交易确认
+                                        await tx.wait();
+                                    }else{
+                                        const tx = await signer.sendTransaction({
+                                            to: address,
+                                            value: ethers.BigNumber.from(wei), // 发送的 ETH 金额
+                                            gasLimit: ethers.BigNumber.from(limit), // 设置 gas 限制
+                                        }); 
+                                    
+                                        // 等待交易确认
+                                        await tx.wait();
+                                    }
 
-                                    // 等待交易确认
-                                    await tx.wait();
 
                                     // 显示成功信息
                                     const p = document.createElement('p');
@@ -392,6 +405,28 @@ main()
                             innerContainer2.appendChild(inputE2);
 
                             div.appendChild(innerContainer2);
+                            
+                            // data输入参数
+                            const innerContainer3 = document.createElement('div');
+                            innerContainer3.className = 'inner-container'; // 添加一个类名
+
+                            // 为每个输入参数创建一个标签
+                            const label3 = document.createElement('label');
+                            // 设置标签文本为参数名称
+                            label3.innerText = 'data: ';
+                            // 将标签添加到参数输入区域
+                            div.appendChild(label3);
+                            innerContainer3.appendChild(label3);
+
+                            // 为每个输入参数创建一个文本输入框
+                            const inputE3 = document.createElement('input');
+                            // 设置输入框类型为文本
+                            inputE3.type = 'text';
+                            inputE3.placeholder = "0x00";
+                            // 将输入框添加到参数输入区域
+                            innerContainer3.appendChild(inputE3);
+
+                            div.appendChild(innerContainer3);
                         }
                             
                         // 页面加载完成后立即调用 loadContract 函数
