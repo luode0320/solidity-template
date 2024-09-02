@@ -175,21 +175,22 @@ main()
                                             args.push(inputEl.value);
                                         });
 
+                                        var func = item.name + "(";
+                                        // 检查是否有输入参数
+                                        if (item.inputs && item.inputs.length > 0) {
+                                            func += item.inputs.map(input => {
+                                                return input.type;
+                                            }).join(",");
+                                        }
+                                        func = func + ")";
+
                                         try {
-                                            var func = item.name + "(";
-                                            // 检查是否有输入参数
-                                            if (item.inputs && item.inputs.length > 0) {
-                                                func += item.inputs.map(input => {
-                                                    return input.type;
-                                                }).join(",");
-                                            }
-                                            func = func + ")";
                                             // 使用收集到的参数调用合约方法
                                             const result = await contract[func](...args);
                                             // 在结果区域显示成功信息及结果
                                             const p = document.createElement('p');
                                             p.className = 'result-success';
-                                            p.innerHTML = "调用成功: " + item.name + "(): <br>" + result;
+                                            p.innerHTML = "调用成功: " + func + ": <br>" + result;
                                             results.appendChild(p);
 
                                             results.scrollTop = results.scrollHeight;
@@ -197,7 +198,7 @@ main()
                                             // 在结果区域显示错误信息
                                             const p = document.createElement('p');
                                             p.className = 'result-error';
-                                            p.innerHTML = "调用失败: " + item.name + "(): <br>" + error.message;
+                                            p.innerHTML = "调用失败: " + func + ": <br>" + error.message;
                                             results.appendChild(p);
 
                                             results.scrollTop = results.scrollHeight;
@@ -297,9 +298,10 @@ main()
                     #methods,
                     #results {
                         flex: 1;
-                        padding: 20px;
+                        padding: 5px;
                         max-height: 700px;
                         overflow-y: auto;
+                        border: 2px solid #bec5d5;
                     }
 
                     #methods {
@@ -307,7 +309,9 @@ main()
                     }
 
                     #results {
-                        border-left: 1px solid #ddd;
+                        background-color: #040404;
+                        border-radius: 10px;
+                        border: 1px solid #040404;
                         /* 添加左侧边框，如果需要的话 */
                     }
 
@@ -342,6 +346,7 @@ main()
                     #methods {
                         max-width: 600px;
                         padding: 20px;
+                        border-radius: 10px;
                     }
 
                     /* 标签样式 */
@@ -355,11 +360,11 @@ main()
                     #results p {
                         margin: 0;
                         padding: 10px 0;
-                        border-top: 1px solid #ddd;
+                        border-bottom: 1px solid #5d4e4e;
                     }
 
                     #results .result-success {
-                        color: green;
+                        color: #4ec54e;
                     }
 
                     #results .result-error {
@@ -372,7 +377,7 @@ main()
                         /* 使用 Flexbox 布局 */
                         flex-direction: row;
                         /* 添加边框 */
-                        border: 1px solid #ccc;
+                        border: 2px solid #d1bccc;
                         /* 内边距 */
                         padding: 10px 10px;
                         /* 边框圆角 */
