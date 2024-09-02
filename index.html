@@ -12,7 +12,7 @@
                 <body>
                     <div id="contractAddressInput">
                         <label for="contractAddress">合约地址:</label>
-                        <input type="text" id="contractAddress" placeholder="0x..." value='0xc5a5C42992dECbae36851359345FE25997F5C42d'>
+                        <input type="text" id="contractAddress" placeholder="0x..." value='0x9A676e781A523b5d0C0e43731313A708CB607508'>
                         <button onclick="loadContract()">刷新合约</button>
                     </div>
 
@@ -22,7 +22,7 @@
                     </div>
 
                     <script>
-                        const ARTIFACTS_PATH = '../artifacts/contracts/Contract.sol/Contract.json';
+                        const ARTIFACTS_PATH = '/artifacts/contracts/Contract.sol/Contract.json';
                         const NETWORK = 'http://127.0.0.1:8545';
 
                         // 读取合约的 ABI

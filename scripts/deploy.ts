@@ -69,6 +69,9 @@ main()
     .then((contractAddress) => {
         // 只有本地 localhost 才需要生成调试 html 页面
         if (networkName == "localhost") {
+            // 解析路径
+            const parsedPath = path.parse(__dirname);
+            let dir = parsedPath.dir.split(path.sep)[2] ? "/" + parsedPath.dir.split(path.sep)[2] : "";
             let htmlContent = `
                 <!DOCTYPE html>
                 <html lang="en">
@@ -93,7 +96,7 @@ main()
                     </div>
 
                     <script>
-                        const ARTIFACTS_PATH = '../artifacts/contracts/${contractName}.sol/${contractName}.json';
+                        const ARTIFACTS_PATH = '${dir}/artifacts/contracts/${contractName}.sol/${contractName}.json';
                         const NETWORK = 'http://127.0.0.1:8545';
 
                         // 读取合约的 ABI
