@@ -308,7 +308,7 @@ main()
                     .container {
                         display: flex;
                         flex-direction: row;
-                        width: 95%;
+                        width: 90%;
                         padding: 2%;
                     }
 
