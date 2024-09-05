@@ -189,9 +189,16 @@ main()
                                         // results.innerHTML = '';
                                         // 收集所有输入框中的值作为方法参数
                                         const args = [];
+                                        var payable = null;
                                         // 将输入框中的值添加到参数数组中
                                         div.querySelectorAll('input').forEach(inputEl => {
-                                            args.push(inputEl.value);
+                                            if (inputEl.className == 'payable-input') {
+                                                payable = {
+                                                    value: ethers.BigNumber.from(inputEl.value * Math.pow(10, 18) + ""), // 设置发送的 ETH 数量
+                                                };
+                                            } else {
+                                                args.push(inputEl.value);
+                                            }
                                         });
 
                                         var func = item.name + "(";
@@ -205,7 +212,13 @@ main()
 
                                         try {
                                             // 使用收集到的参数调用合约方法
-                                            const result = await contract[func](...args);
+                                            var result = {};
+                                            if (payable) {
+                                                result = await contract[func](...args, { ...payable });
+                                            } else {
+                                                result = await contract[func](...args);
+                                            }
+
                                             if (typeof result === 'object' && result !== null && !Array.isArray(result)) {
                                                 console.log(result);
                                             }
@@ -213,6 +226,9 @@ main()
                                             const p = document.createElement('p');
                                             p.className = 'result-success';
                                             p.innerHTML = "调用成功: " + func + ": <br>" + result;
+                                            if (payable) {
+                                                p.innerHTML = p.innerHTML + ": <br>" + "ETH 发送成功: 金额: " + ethers.utils.formatEther(payable.value) + " ETH";
+                                            }
                                             results.appendChild(p);
 
                                             results.scrollTop = results.scrollHeight;
@@ -254,6 +270,28 @@ main()
                                     } else {
                                         // 如果没有输入参数，则添加一个特定的类
                                         button.classList.add('no-inputs');
+                                    }
+                                        
+                                    // 在所有输入参数之后添加一个额外的输入框
+                                    if (item.stateMutability === 'payable') {
+                                        const payableContainer = document.createElement('div');
+                                        payableContainer.className = 'inner-container';
+
+                                        // 为 payable 输入框创建一个标签
+                                        const payableLabel = document.createElement('label');
+                                        payableLabel.innerText = '发送ETH: ';
+                                        payableContainer.appendChild(payableLabel);
+
+                                        // 为 payable 输入框创建一个文本输入框
+                                        const payableInputEl = document.createElement('input');
+                                        payableInputEl.type = 'text';
+                                        payableInputEl.placeholder = 'payable方法(ETH)';
+                                        payableInputEl.className = 'payable-input';
+                                        // 将标签和输入框添加到容器中
+                                        payableContainer.appendChild(payableInputEl);
+
+                                        // 将 payable 容器添加到 div 中
+                                        div.appendChild(payableContainer);
                                     }
                                 }else if (item.type === 'event') {
                                     // 动态创建事件监听器
