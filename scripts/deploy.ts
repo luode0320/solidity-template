@@ -12,6 +12,8 @@ dotenv.config();
 
 // 需要部署的合约名称
 const contractName: string = process.env.DEPLOY_CONTRACT_NAME!;
+// 合约的测试 html 名称
+const contractHtml: string = "index.html";
 
 // 调用合约方法
 async function exec(contract: any) {
@@ -648,7 +650,7 @@ main()
             // 写入 HTML 文件
             fs.writeFile(path.join(path.dirname(__dirname), 'index.html'), htmlContent, err => {
                 if (err) throw err;
-                console.error("生成调试 html,请用 Live Server 调试:", path.join(path.dirname(__dirname), 'index.html'));
+                console.error("生成调试 html,请用 Live Server 调试:", path.join(path.dirname(__dirname), contractHtml));
             });
         }
     })
