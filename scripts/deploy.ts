@@ -648,7 +648,7 @@ main()
             `;
 
             // 写入 HTML 文件
-            fs.writeFile(path.join(path.dirname(__dirname), 'index.html'), htmlContent, err => {
+            fs.writeFile(path.join(path.dirname(__dirname), contractHtml), htmlContent, err => {
                 if (err) throw err;
                 console.error("生成调试 html,请用 Live Server 调试:", path.join(path.dirname(__dirname), contractHtml));
             });
