@@ -193,9 +193,11 @@ main()
                                         // 将输入框中的值添加到参数数组中
                                         div.querySelectorAll('input').forEach(inputEl => {
                                             if (inputEl.className == 'payable-input') {
-                                                payable = {
-                                                    value: ethers.BigNumber.from(inputEl.value * Math.pow(10, 18) + ""), // 设置发送的 ETH 数量
-                                                };
+                                                if (inputEl.value) {
+                                                    payable = {
+                                                        value: ethers.BigNumber.from(inputEl.value * Math.pow(10, 18) + ""), // 设置发送的 ETH 数量
+                                                    };          
+                                                }
                                             } else {
                                                 args.push(inputEl.value);
                                             }
