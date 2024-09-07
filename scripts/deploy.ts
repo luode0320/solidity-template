@@ -199,7 +199,19 @@ main()
                                                     };          
                                                 }
                                             } else {
-                                                args.push(inputEl.value);
+                                                try {
+                                                    // 尝试解析 inputEl.value 为一个数组: ["0x9A676e781A523b5d0C0e43731313A708CB607508"]
+                                                    const valueArray = JSON.parse(inputEl.value);
+                                                    if (Array.isArray(valueArray)) {
+                                                        // 如果成功解析为数组，则将整个数组推入 args
+                                                        args.push(valueArray);
+                                                    } else {
+                                                        throw new Error("Input value is not an array.");
+                                                    }
+                                                } catch (error) {
+                                                    // 如果不是数组，则将原始字符串推入 args
+                                                    args.push(inputEl.value);
+                                                }
                                             }
                                         });
 
