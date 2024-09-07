@@ -194,9 +194,11 @@ main()
                                         div.querySelectorAll('input').forEach(inputEl => {
                                             if (inputEl.className == 'payable-input') {
                                                 if (inputEl.value) {
+                                                    // 确保转换为整数字符串
+                                                    const valueInWei = BigInt(inputEl.value * Math.pow(10, 18)).toString();
                                                     payable = {
-                                                        value: ethers.BigNumber.from(inputEl.value * Math.pow(10, 18) + ""), // 设置发送的 ETH 数量
-                                                    };          
+                                                        value: ethers.BigNumber.from(valueInWei), // 设置发送的 ETH 数量
+                                                    };     
                                                 }
                                             } else {
                                                 try {
@@ -373,7 +375,7 @@ main()
                                 });
 
                                 try {
-                                    var wei = args[0] * Math.pow(10, 18) + ""
+                                    var wei = BigInt(args[0] * Math.pow(10, 18)).toString()
                                     const limit = args[1]
                                     // 获取签名者对象
                                     const signer = provider.getSigner(1);
