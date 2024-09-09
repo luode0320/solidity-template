@@ -126,6 +126,7 @@ main()
                         const NETWORK = '${RPC_URL}';
 
                         let address;
+                        let signer;
                         let contract;
                         let provider;
                         let abi;
@@ -164,7 +165,6 @@ main()
                             // 注意：这里假设 NETWORK 变量已经定义并包含 RPC 节点的 URL
                             provider = new ethers.providers.JsonRpcProvider(NETWORK);
 
-                            let signer;
                             const accountSelect = document.getElementById("account");
                             if ('${networkName}' == 'localhost') {
                                 // 从提供者获取一个签名者对象，它将用于发送带有私钥签名的交易
@@ -423,8 +423,6 @@ main()
                                 try {
                                     var wei = BigInt(args[0] * Math.pow(10, 18)).toString()
                                     const limit = args[1]
-                                    // 获取签名者对象
-                                    const signer = provider.getSigner(1);
                                     // 构建交易数据
                                     if (args[2]){
                                         const tx = await signer.sendTransaction({
