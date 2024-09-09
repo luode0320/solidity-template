@@ -243,6 +243,7 @@ main()
                                                     const valueInWei = BigInt(inputEl.value * Math.pow(10, 18)).toString();
                                                     payable = {
                                                         value: ethers.BigNumber.from(valueInWei), // 设置发送的 ETH 数量
+                                                        gasLimit: 3000000,
                                                     };     
                                                 }
                                             } else {
@@ -277,7 +278,7 @@ main()
                                             if (payable) {
                                                 result = await contract[func](...args, { ...payable });
                                             } else {
-                                                result = await contract[func](...args);
+                                                result = await contract[func](...args,{ gasLimit: 3000000 });
                                             }
 
                                             if (typeof result === 'object' && result !== null && !Array.isArray(result)) {
@@ -439,7 +440,7 @@ main()
                                         const tx = await signer.sendTransaction({
                                             to: address,
                                             value: ethers.BigNumber.from(wei), // 发送的 ETH 金额
-                                            gasLimit: ethers.BigNumber.from(limit), // 设置 gas 限制
+                                            gasLimit: limit, // 设置 gas 限制
                                         }); 
                                     
                                         // 等待交易确认
@@ -501,7 +502,7 @@ main()
                             const inputE2 = document.createElement('input');
                             // 设置输入框类型为文本
                             inputE2.type = 'text';
-                            inputE2.value = "30000";
+                            inputE2.value = "3000000";
                             // 将输入框添加到参数输入区域
                             innerContainer2.appendChild(inputE2);
 
