@@ -61,4 +61,10 @@ contract Contract {
         // 返回一个账户所拥有的代币数量
         return balances[account];
     }
+
+    // receive方法，接收eth时被触发
+    receive() external payable {}
+
+    // fallback
+    fallback() external payable {}
 }

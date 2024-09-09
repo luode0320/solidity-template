@@ -440,7 +440,7 @@ main()
                                         const tx = await signer.sendTransaction({
                                             to: address,
                                             value: ethers.BigNumber.from(wei), // 发送的 ETH 金额
-                                            gasLimit: limit, // 设置 gas 限制
+                                            gasLimit: ethers.BigNumber.from(limit), // 设置 gas 限制
                                         }); 
                                     
                                         // 等待交易确认
