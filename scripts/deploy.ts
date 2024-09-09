@@ -15,6 +15,16 @@ const contractName: string = process.env.DEPLOY_CONTRACT_NAME!;
 // 合约的测试 html 名称
 const contractHtml: string = "index.html";
 
+// 我们自己的钱包私钥
+let PRIVATE_KEY: string = "";
+// 网络的 URL
+let RPC_URL = "http://127.0.0.1:8545";
+// 如果不是本地，则使用环境变量
+if (networkName != "localhost") {
+    RPC_URL = process.env.RPC_URL!;
+    PRIVATE_KEY = process.env.PRIVATE_KEY!;
+}
+
 // 调用合约方法
 async function exec(contract: any) {
     // console.log("_________________________合约调用________________________________");
@@ -55,7 +65,7 @@ async function main() {
     console.log("_________________________部署合约________________________________");
     // 获取合约工厂。
     const contractFactory = await ethers.getContractFactory(contractName);
-    // 部署合约
+    // 部署合约(可以添加构造函数, 按照构造函数的顺序添加即可)
     const contract = await contractFactory.deploy();
     //  等待部署完成
     await contract.waitForDeployment()
@@ -70,11 +80,14 @@ async function main() {
 main()
     .then((contractAddress) => {
         // 只有本地 localhost 才需要生成调试 html 页面
-        if (networkName == "localhost") {
-            // 解析路径
-            const parsedPath = path.parse(__dirname);
-            let dir = parsedPath.dir.split(path.sep)[2] ? "/" + parsedPath.dir.split(path.sep)[2] : "";
-            let htmlContent = `
+        if (networkName == "hardhat") {
+            return
+        }
+
+        // 解析路径
+        const parsedPath = path.parse(__dirname);
+        let dir = parsedPath.dir.split(path.sep)[2] ? "/" + parsedPath.dir.split(path.sep)[2] : "";
+        let htmlContent = `
                 <!DOCTYPE html>
                 <html lang="en">
 
@@ -86,6 +99,12 @@ main()
                 </head>
 
                 <body>
+                    <!-- 添加下拉列表 -->
+                    <div id="accountSelector">
+                        <select id="account" onchange="selectAccount()">
+                            <!-- 选项将在 JavaScript 中动态生成 -->
+                        </select>
+                    </div>
                     <div id="contractAddressInput">
                         <label for="contractAddress">合约地址:</label>
                         <input type="text" id="contractAddress" placeholder="0x..." value='${contractAddress}'>
@@ -104,7 +123,12 @@ main()
                     <script>
                         const ARTIFACTS_PATH = '${dir}/artifacts/contracts/${contractName}.sol/${contractName}.json';
                         const CODE_PATH = '${dir}/contracts/${contractName}.sol';
-                        const NETWORK = 'http://127.0.0.1:8545';
+                        const NETWORK = '${RPC_URL}';
+
+                        let address;
+                        let contract;
+                        let provider;
+                        let abi;
 
                         // 读取合约的 code
                         async function loadCode() {
@@ -123,7 +147,7 @@ main()
                         // 加载合约网络
                         async function loadContract() {
                             // 获取用户输入的合约地址
-                            const address = document.getElementById('contractAddress').value;
+                            address = document.getElementById('contractAddress').value;
                             if (!address) {
                                 alert("请输入合约地址.");
                                 return;
@@ -135,14 +159,35 @@ main()
                             solidityCode.style.display = 'block';
 
                             // 读取合约的 ABI(应用程序二进制接口)
-                            const abi = await loadArtifact();
+                            abi = await loadArtifact();
                             // 创建一个 JSON-RPC 提供者，用于与 Ethereum 节点进行通信
                             // 注意：这里假设 NETWORK 变量已经定义并包含 RPC 节点的 URL
-                            const provider = new ethers.providers.JsonRpcProvider(NETWORK);
-                            // 从提供者获取一个签名者对象，它将用于发送带有私钥签名的交易
-                            const signer = provider.getSigner();
+                            provider = new ethers.providers.JsonRpcProvider(NETWORK);
+
+                            let signer;
+                            const accountSelect = document.getElementById("account");
+                            if ('${networkName}' == 'localhost') {
+                                // 从提供者获取一个签名者对象，它将用于发送带有私钥签名的交易
+                                signer = provider.getSigner(0);
+                                for (let index = 0; index < 3; index++) {
+                                    const option = document.createElement("option");
+                                    option.value = index;
+                                    const signerAddress = await provider.getSigner(index).getAddress();
+                                    option.text = signerAddress;
+                                    accountSelect.appendChild(option);
+                                }
+                            } else {
+                                // 使用私钥创建一个签名者对象
+                                signer = new ethers.Wallet('${PRIVATE_KEY}', provider);
+                                const option = document.createElement("option");
+                                option.value = "0";
+                                option.text = signer.address;
+                                accountSelect.appendChild(option);
+                                console.log(signer.address);
+                            }
+
                             // 使用合约地址、ABI 和签名者创建一个合约实例
-                            const contract = new ethers.Contract(address, abi, signer);
+                            contract = new ethers.Contract(address, abi, signer);
 
                             // 获取结果展示区域
                             const results = document.getElementById('results');
@@ -484,7 +529,21 @@ main()
 
                             div.appendChild(innerContainer3);
                         }
-                            
+                         
+                        // 选择账户
+                        function selectAccount() {
+                            const selectedIndex = +document.getElementById("account").value;
+                            if ('${networkName}' == 'localhost') {
+                                // 从提供者获取一个签名者对象，它将用于发送带有私钥签名的交易
+                                signer = provider.getSigner(selectedIndex);
+                                // 使用合约地址、ABI 和签名者创建一个合约实例
+                                contract = new ethers.Contract(address, abi, signer);
+                            }
+                            const txt = document.getElementById("account").options[selectedIndex].text
+                            navigator.clipboard.writeText(txt);
+                            console.log(txt)
+                        }
+
                         // 页面加载完成后立即调用 loadContract 函数
                         window.onload = function () {
                             loadContract();
@@ -552,8 +611,8 @@ main()
                         border: 2px solid #bec5d5;
                     }
 
-                    #methods {
-                        /* 添加右侧边框 */
+                    #account {
+                        border-radius: 4px;
                     }
 
                     #results {
@@ -701,12 +760,11 @@ main()
                 </html>
             `;
 
-            // 写入 HTML 文件
-            fs.writeFile(path.join(path.dirname(__dirname), contractHtml), htmlContent, err => {
-                if (err) throw err;
-                console.error("生成调试 html,请用 Live Server 调试:", path.join(path.dirname(__dirname), contractHtml));
-            });
-        }
+        // 写入 HTML 文件
+        fs.writeFile(path.join(path.dirname(__dirname), contractHtml), htmlContent, err => {
+            if (err) throw err;
+            console.error("生成调试 html,请用 Live Server 调试:", path.join(path.dirname(__dirname), contractHtml));
+        });
     })
     .catch(error => {
         console.error(error); // 如果发生错误，则输出错误信息。

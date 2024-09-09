@@ -37,6 +37,11 @@ const config: HardhatUserConfig = {
       // Sepolia 网络的链 ID
       chainId: 11155111
     },
+    ethereum: {
+      url: RPC_URL,
+      accounts: [PRIVATE_KEY],
+      chainId: 1,
+    },
   },
   // Etherscan 配置，用于访问以太坊区块链数据
   etherscan: {
