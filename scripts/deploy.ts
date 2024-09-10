@@ -25,6 +25,13 @@ if (networkName != "localhost") {
     PRIVATE_KEY = process.env.PRIVATE_KEY!;
 }
 
+// 合约构造函数
+async function constructor(contractFactory: any) {
+    // 部署合约(可以添加构造函数, 按照构造函数的顺序添加即可)
+    const contract = await contractFactory.deploy();
+    return contract;
+}
+
 // 调用合约方法
 async function exec(contract: any) {
     // console.log("_________________________合约调用________________________________");
@@ -66,7 +73,7 @@ async function main() {
     // 获取合约工厂。
     const contractFactory = await ethers.getContractFactory(contractName);
     // 部署合约(可以添加构造函数, 按照构造函数的顺序添加即可)
-    const contract = await contractFactory.deploy();
+    const contract = await constructor(contractFactory);
     //  等待部署完成
     await contract.waitForDeployment()
     console.log(`合约地址: ${contract.target}`);
