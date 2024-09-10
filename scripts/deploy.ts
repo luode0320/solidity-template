@@ -3,17 +3,20 @@ import dotenv from "dotenv";
 import * as fs from 'fs';
 import * as path from 'path';
 
-// 获取当前网络信息
-const networkName = network.name;
-console.log("当前网络:", networkName);
 
 // 加载环境变量
 dotenv.config();
 
 // 需要部署的合约名称
-const contractName: string = process.env.DEPLOY_CONTRACT_NAME!;
+const contractName: string = "" ? "" : process.env.DEPLOY_CONTRACT_NAME!;
+console.log("合约名称:", contractName);
+
 // 合约的测试 html 名称
 const contractHtml: string = "index.html";
+
+// 获取当前网络信息
+const networkName = network.name;
+console.log("当前网络:", networkName);
 
 // 我们自己的钱包私钥
 let PRIVATE_KEY: string = "";
@@ -24,6 +27,8 @@ if (networkName != "localhost") {
     RPC_URL = process.env.RPC_URL!;
     PRIVATE_KEY = process.env.PRIVATE_KEY!;
 }
+
+console.log("网络地址:", RPC_URL);
 
 // 合约构造函数
 async function constructor(contractFactory: any) {
