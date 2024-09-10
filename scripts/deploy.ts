@@ -8,11 +8,13 @@ import * as path from 'path';
 dotenv.config();
 
 // 需要部署的合约名称
-const contractName: string = "" ? "" : process.env.DEPLOY_CONTRACT_NAME!;
+const name: string = "";
+// 合约的测试 html 名称
+const contractName: string = name ? name : process.env.DEPLOY_CONTRACT_NAME!;
 console.log("合约名称:", contractName);
 
 // 合约的测试 html 名称
-const contractHtml: string = "index.html";
+const contractHtml: string = name ? `${name}.html` : "index.html";
 
 // 获取当前网络信息
 const networkName = network.name;
