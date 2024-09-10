@@ -432,6 +432,9 @@ main()
                                     args.push(inputEl.value);
                                 });
 
+                                const p = document.createElement('p');
+                                p.className = 'result-success';
+
                                 try {
                                     var wei = BigInt(args[0] * Math.pow(10, 18)).toString()
                                     const limit = args[1]
@@ -446,6 +449,8 @@ main()
                                     
                                         // 等待交易确认
                                         await tx.wait();
+                                        
+                                        p.innerHTML = "callData 发送成功: <br>金额: " + ethers.utils.formatEther(ethers.BigNumber.from(wei)) + " ETH, Gas Limit: " + limit + ", Data: " + args[2];
                                     }else{
                                         const tx = await signer.sendTransaction({
                                             to: address,
@@ -455,20 +460,17 @@ main()
                                     
                                         // 等待交易确认
                                         await tx.wait();
+                                        
+                                        p.innerHTML = "callData 发送成功: <br>金额: " + ethers.utils.formatEther(ethers.BigNumber.from(wei)) + " ETH, Gas Limit: " + limit;
                                     }
 
-
-                                    // 显示成功信息
-                                    const p = document.createElement('p');
-                                    p.className = 'result-success';
-                                    p.innerHTML = "ETH 发送成功: <br>金额: " + ethers.utils.formatEther(ethers.BigNumber.from(wei)) + " ETH, Gas Limit: " + limit;
                                     document.getElementById('results').appendChild(p);
                                     document.getElementById('results').scrollTop = document.getElementById('results').scrollHeight;
                                 } catch (error) {
                                     // 显示错误信息
                                     const p = document.createElement('p');
                                     p.className = 'result-error';
-                                    p.innerHTML = "发送 ETH 失败: <br>" + error.message;
+                                    p.innerHTML = "callData 发送失败: <br>" + error.message;
                                     document.getElementById('results').appendChild(p);
                                     document.getElementById('results').scrollTop = document.getElementById('results').scrollHeight;
                                 }
