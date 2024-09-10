@@ -410,7 +410,7 @@ main()
                             // 创建一个按钮，用于调用合约中的函数
                             const button = document.createElement('button');
                             // 设置按钮文本为函数名称
-                            button.innerText = "发送 ETH";
+                            button.innerText = "callData";
 
                             // 包装按钮和参数输入框
                             const wrapper = document.createElement('div');
@@ -490,7 +490,7 @@ main()
                             const inputEl = document.createElement('input');
                             // 设置输入框类型为文本
                             inputEl.type = 'text';
-                            inputEl.value = "1";
+                            inputEl.placeholder = "1";
                             // 将输入框添加到参数输入区域
                             innerContainer.appendChild(inputEl);
 
