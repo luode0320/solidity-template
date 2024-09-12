@@ -138,9 +138,11 @@ main()
                         const ARTIFACTS_PATH = '${dir}/artifacts/contracts/${contractName}.sol/${contractName}.json';
                         const CODE_PATH = '${dir}/contracts/${contractName}.sol';
                         const NETWORK = '${RPC_URL}';
+                        const CONTRACT_NAME = '${contractName}';
 
                         let address;
                         let signer;
+                        let signerAddress;
                         let contract;
                         let provider;
                         let abi;
@@ -183,11 +185,11 @@ main()
                             if ('${networkName}' == 'localhost') {
                                 // 从提供者获取一个签名者对象，它将用于发送带有私钥签名的交易
                                 signer = provider.getSigner(0);
+                                signerAddress = await signer.getAddress();
                                 for (let index = 0; index < 3; index++) {
                                     const option = document.createElement("option");
                                     option.value = index;
-                                    const signerAddress = await provider.getSigner(index).getAddress();
-                                    option.text = signerAddress;
+                                    option.text = await provider.getSigner(index).getAddress();
                                     accountSelect.appendChild(option);
                                 }
                             } else {
@@ -195,7 +197,8 @@ main()
                                 signer = new ethers.Wallet('${PRIVATE_KEY}', provider);
                                 const option = document.createElement("option");
                                 option.value = "0";
-                                option.text = signer.address;
+                                signerAddress = signer.address
+                                option.text = signerAddress;
                                 accountSelect.appendChild(option);
                                 console.log(signer.address);
                             }
@@ -546,11 +549,12 @@ main()
                         }
                          
                         // 选择账户
-                        function selectAccount() {
+                        async function selectAccount() {
                             const selectedIndex = +document.getElementById("account").value;
                             if ('${networkName}' == 'localhost') {
                                 // 从提供者获取一个签名者对象，它将用于发送带有私钥签名的交易
                                 signer = provider.getSigner(selectedIndex);
+                                signerAddress = await signer.getAddress();
                                 // 使用合约地址、ABI 和签名者创建一个合约实例
                                 contract = new ethers.Contract(address, abi, signer);
                             }
