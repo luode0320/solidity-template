@@ -280,14 +280,22 @@ main()
                                             }
                                         });
 
-                                        var func = item.name + "(";
+                                        var func = item.name;
+                                        var components = false;
                                         // 检查是否有输入参数
                                         if (item.inputs && item.inputs.length > 0) {
+                                            func += "(";
                                             func += item.inputs.map(input => {
+                                                if (input.components){
+                                                    components = true;
+                                                }
                                                 return input.type;
                                             }).join(",");
+                                             func = func + ")";
                                         }
-                                        func = func + ")";
+                                        if (components){
+                                            func = item.name;
+                                        }
 
                                         try {
                                             // 使用收集到的参数调用合约方法
