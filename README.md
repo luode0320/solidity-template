@@ -63,11 +63,17 @@ Live Server 启动一次可以多次使用, 只要是同一个路径的  `index.
 ## 启动一个网络节点
 
 新开一个终端执行: 
-
+这个默认是 localhost 的网络
 ```shell
 yarn hardhat node
 ```
 
+如果你需要多个测试网络:
+
+```shell
+yarn hardhat node --network testnet1
+yarn hardhat node --network testnet2
+```
 
 
 ## 部署合约到本地网络

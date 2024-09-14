@@ -29,6 +29,14 @@ const config: HardhatUserConfig = {
       url: "http://127.0.0.1:8545",
       chainId: 31337,
     },
+    testnet1: {
+      url: "http://127.0.0.1:8545",
+      chainId: 31337,
+    },
+    testnet2: {
+      url: "http://127.0.0.1:8546",
+      chainId: 31338,
+    },
     sepolia: {
       // Sepolia 网络的 RPC URL
       url: RPC_URL,
