@@ -68,13 +68,6 @@ Live Server 启动一次可以多次使用, 只要是同一个路径的  `index.
 yarn hardhat node
 ```
 
-如果你需要多个测试网络:
-
-```shell
-yarn hardhat node --network testnet1
-yarn hardhat node --network testnet2
-```
-
 
 ## 部署合约到本地网络
 
